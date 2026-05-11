@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF Panel</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:black;
+  color:#00eaff;
+}
+
+/* LOCK */
+#lock{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.box{
+  width:300px;
+  padding:20px;
+  border-radius:15px;
+  background:#000;
+  box-shadow:0 0 20px #00eaff;
+  text-align:center;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+  background:#001;
+  color:#00eaff;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#00eaff,#0077ff);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* MAIN */
+#main{
+  display:none;
+  padding:10px;
+}
+
+/* TAB MENU */
+.tabs{
+  display:flex;
+  justify-content:space-around;
+  margin-bottom:10px;
+}
+
+.tabs button{
+  flex:1;
+  margin:2px;
+}
+
+/* CONTENT */
+.tabcontent{
+  display:none;
+}
+
+.active{
+  display:block;
+}
+
+.card{
+  background:#000;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:10px;
+  box-shadow:0 0 15px #00eaff;
+}
+
+.slider{
+  width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 LOCK -->
+<div id="lock">
+  <div class="box">
+    <h2>🔐 Nhập Key</h2>
+    <input id="key" placeholder="Dán key...">
+    <button onclick="check()">Mở khóa</button>
+    <div id="status"></div>
+  </div>
+</div>
+
+<!-- 🎮 MAIN -->
+<div id="main">
+
+  <!-- TAB -->
+  <div class="tabs">
+    <button onclick="openTab('aim')">🎯 Aim</button>
+    <button onclick="openTab('control')">⚙️ Control</button>
+    <button onclick="openTab('device')">📱 Device</button>
+  </div>
+
+  <!-- TAB 1 -->
+  <div id="aim" class="tabcontent active">
+    <div class="card">
+      <h3>Headshot</h3>
+      <input type="range" min="0" max="100" class="slider">
+    </div>
+
+    <div class="card">
+      <h3>Accuracy</h3>
+      <input type="range" min="0" max="100" class="slider">
+    </div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div id="control" class="tabcontent">
+    <div class="card">
+      <h3>Stability</h3>
+      <input type="range" min="0" max="100" class="slider">
+    </div>
+
+    <div class="card">
+      <h3>Sensitivity</h3>
+      <input type="range" min="0" max="100" class="slider">
+    </div>
+  </div>
+
+  <!-- TAB 3 -->
+  <div id="device" class="tabcontent">
+    <div class="card">
+      <h3>Android</h3>
+      <button>Bật Android</button>
+    </div>
+
+    <div class="card">
+      <h3>iOS</h3>
+      <button>Bật iOS</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 🔐 CHECK KEY
+function check(){
+  let input=document.getElementById("key").value;
+  let parts=input.split("-");
+
+  if(parts.length < 4){
+    document.getElementById("status").innerText="❌ Key sai";
+    return;
+  }
+
+  try{
+    let encoded=parts.slice(3).join("-");
+    let expire=parseInt(atob(encoded));
+
+    if(Date.now() > expire){
+      document.getElementById("status").innerText="⏳ Hết hạn";
+      return;
+    }
+
+    document.getElementById("lock").style.display="none";
+    document.getElementById("main").style.display="block";
+
+  }catch{
+    document.getElementById("status").innerText="❌ Key lỗi";
+  }
+}
+
+// 📑 TAB SWITCH
+function openTab(name){
+  let tabs=document.querySelectorAll(".tabcontent");
+  tabs.forEach(t=>t.style.display="none");
+
+  document.getElementById(name).style.display="block";
+}
+</script>
+
+</body>
+</html>
